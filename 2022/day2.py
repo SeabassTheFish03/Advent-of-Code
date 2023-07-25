@@ -1,8 +1,1 @@
-connection = ['A', 'B', 'C', 'X', 'Y', 'Z']
-scores = [0, 3, 6]
-offset = [-1, 0, 1]
-
-rounds = open("day2.txt").read().split("\n")
-
-print("2a) Total score by rules for a: " + str(sum(map(lambda rnd: scores[(connection.index(rnd[2]) - connection.index(rnd[0]) + 1) % 3] + (connection.index(rnd[2]) - 3) + 1, rounds))))
-print("2b) Total score by rules for b: " + str(sum(map(lambda rnd: scores[connection.index(rnd[2]) - 3] + ((connection.index(rnd[0]) + connection.index(rnd[2]) - 4) % 3) + 1, rounds))))
+a,b,c="A B C X Y Z".split(),lambda x,r:a.index(r[x]),open("2").readlines();print(sum(map(lambda r:(b(2,r)-b(0,r)+1)%3*3+b(2,r)-2,c)),sum(map(lambda r:b(2,r)*3+(b(0,r)+b(2,r)-1)%3-8,c)))

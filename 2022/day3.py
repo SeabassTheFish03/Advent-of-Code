@@ -1,12 +1,4 @@
-def string_and(strings):
-		sets = list(map(lambda string: set(string), strings))
-		return sets[0].intersection(*sets[1:]).pop()
-def prioritize(character):
-	if (value := ord(character)) > 64 and value < 97:
-		return value - 38
-	return ord(character) - 96
-
-rucks = open("day3.txt").read().split("\n")
-
-print("3a) Total Priority for split rucks: " + str(sum(map(lambda ruck: prioritize(string_and((ruck[:int(len(ruck)/2)], ruck[int(len(ruck)/2):]))), rucks))))
-print("3b) Total Priority for groups of 3: " + str(sum(map(lambda group: prioritize(string_and(group)), [(rucks[i], rucks[i+1], rucks[i+2]) for i in range(0, len(rucks), 3)]))))
+def a(t):s=list(map(lambda v:set(v),t));return s[0].intersection(*s[1:]).pop()
+b=lambda c:(ord(c)>64 and ord(c)<97)*(ord(c)-38)+(ord(c)>96)*(ord(c)-96)
+r=open("3").read().split("\n")
+print(sum(map(lambda k:b(a((k[:int(len(k)/2)],k[int(len(k)/2):]))),r)),sum(map(lambda g:b(a(g)),[(r[i],r[i+1],r[i+2]) for i in range(0,len(r),3)])))
