@@ -2,6 +2,7 @@ import scala.io.Source
 import scala.util.matching.Regex
 import scala.util.matching.Regex._
 import scala.util.chaining._
+import scala.math._
 
 @main def main(day: Int): Unit =
     day match
@@ -59,7 +60,38 @@ import scala.util.chaining._
             )
         case 3 =>
             println("Day 3:")
-            println("Part 1:\n"+
-                "¯\\_(ツ)_/¯"
+            println("Part 1:\n"
+                /*Source.fromFile("./Puzzle Inputs/day3.txt").getLines
+                    .toArray
+                    .zipWithIndex
+                    .pipe(linesArray =>
+                        linesArray.map((line, lindex) =>
+                            line.zipWithIndex
+                                .filter(a => "!@#$%^&*-+=/".toArray.contains(a._1))
+                                .map((char, chardex) =>
+                                    Array(-1, 0, 1)
+                                        .flatMap(x => Array(-1, 0, 1).map(y => (x, y)))
+                                        .map(offset =>
+                                            linesArray(lindex+offset._1)(chardex+offset._2).pipe(charInQuestion =>
+                                                if charInQuestion.isDigit then
+                                                    1
+                                                else 0
+                                            )
+                                        )
+                                )
+                        )
+                    )*/
             )
+        case 4 =>
+            println("Day 4:")
+            println("Part 1:\n"+
+                Source.fromFile("./Puzzle Inputs/day4.txt").getLines.map(_.split(':').pipe(splitColon =>
+                        splitColon(1).split('|').map(splitBar =>
+                            Set(splitBar.split(' ').filter(_.nonEmpty).map(_.toInt)*)
+                        ).reduceLeft((a, b) => a.intersect(b)).size.pipe(x => pow(2,x-1).toInt)
+                    )
+                ).sum
+            )
+            println("Part 2:\n")
+
         case _ => println("Invalid day")
