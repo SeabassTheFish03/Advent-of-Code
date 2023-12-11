@@ -3,6 +3,7 @@ import scala.util.matching.Regex
 import scala.util.matching.Regex._
 import scala.util.chaining._
 import scala.math._
+import scala.collection.immutable.Queue
 
 @main def main(day: Int): Unit =
     day match
@@ -23,7 +24,7 @@ import scala.math._
                                 .reverse.mkString("(","|",")").r.unanchored
                             .findAllMatchIn(line.reverse).next.group(1)
                         )
-                    ).apply(Array("[0-9]", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine")).map(y =>
+                    ).apply(Array("[0-9]","one","two","three","four","five","six","seven","eight","nine")).map(y =>
                         if y(0).isDigit then
                             y.toInt
                         else
@@ -59,6 +60,10 @@ import scala.math._
                 ).sum
             )
         case 3 =>
+            /*def absorbNum(arr: Array[String], rowdex: Int, coldex: Int): Int =
+                val nextLook = Array(-1, 0, 1).flatMap(x => Array(-1, 0, 1).map(y => (x, y)))
+
+                nextLook.filter((x, y) => )*/
             println("Day 3:")
             println("Part 1:\n"
                 /*Source.fromFile("./Puzzle Inputs/day3.txt").getLines
@@ -83,15 +88,45 @@ import scala.math._
                     )*/
             )
         case 4 =>
+            def part2(q: Queue[Int], accum: Int, lines: Array[String]): (Queue[Int], Int) =
+                if q.isEmpty then (q, accum)
+                else
+                    q.dequeue.pipe((front, dqd) =>
+                        lines(front).pipe(lineString =>
+                            lineString.split(':')(1).split('|')
+                                .map(splitBar =>
+                                    Set(splitBar.split(' ').filter(_.nonEmpty).map(_.toInt)*)
+                                )
+                                .reduce(_.intersect(_)).size.tap(println)
+                                .pipe(numWins =>
+                                    (dqd.enqueueAll(dqd.slice(0, numWins)), accum+numWins)
+                                )
+                        )
+                    ).pipe(recur => part2(recur._1, recur._2, lines))
             println("Day 4:")
             println("Part 1:\n"+
-                Source.fromFile("./Puzzle Inputs/day4.txt").getLines.map(_.split(':').pipe(splitColon =>
-                        splitColon(1).split('|').map(splitBar =>
+                Source.fromFile("./Puzzle Inputs/day4.txt").getLines
+                    .map(_.split(':')(1).split('|').map(splitBar =>
                             Set(splitBar.split(' ').filter(_.nonEmpty).map(_.toInt)*)
                         ).reduceLeft((a, b) => a.intersect(b)).size.pipe(x => pow(2,x-1).toInt)
-                    )
-                ).sum
+                    ).sum
             )
-            println("Part 2:\n")
+            println("Part 2:\n"+
+                Source.fromFile("./Puzzle Inputs/day4.txt").getLines.map(line =>
 
+                )
+            )
+        case 5 =>
+            println("Day 5:")
+            println("Part 1:\n"+
+                ???
+            )
+        case 9 =>
+            def day9(seq: Array[Int]): (Array[Int], Int) = 
+                if seq.sum == 0 then (seq, 0)
+                else day9(seq.sliding(2).map(-1*_.reduce(_-_)).toArray).pipe((newSeq, ph) => (seq, seq.last + ph))
+            println("Day 9:")
+            println("Part 1:\n"+
+                Source.fromFile("./Puzzle Inputs/day9.txt").getLines.map(_.split(" ").map(_.toInt).pipe(day9(_))._2).sum
+            )
         case _ => println("Invalid day")
