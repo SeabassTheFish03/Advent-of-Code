@@ -129,4 +129,8 @@ import scala.collection.immutable.Queue
             println("Part 1:\n"+
                 Source.fromFile("./Puzzle Inputs/day9.txt").getLines.map(_.split(" ").map(_.toInt).pipe(day9(_))._2).sum
             )
+            println("Part 2:\n"+
+                Source.fromFile("./Puzzle Inputs/day9.txt").getLines
+                    .map(_.split(" ").map(_.toInt).pipe(seq => day9(seq.reverse))._2).sum
+            )
         case _ => println("Invalid day")
