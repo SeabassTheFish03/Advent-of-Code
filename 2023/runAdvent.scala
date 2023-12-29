@@ -96,7 +96,6 @@ def day3part2(file: Iterator[String]): Int =
     rawknit.zipWithIndex.filter(_._1 == '*')
         .map(x => getAdjacent(x._2).toArray.map(_._1)).filter(_.length == 2).map(_.product).sum
     
-
 def day4part1(file: Iterator[String]): Int =
     file.map(_.split(':')(1).split('|')
         .map(splitBar =>
@@ -104,20 +103,29 @@ def day4part1(file: Iterator[String]): Int =
         ).reduceLeft((a, b) => a.intersect(b)).size.pipe(x => pow(2,x-1).toInt)
     ).sum
 def day4part2(file: Iterator[String]): Int =
-    var lines = Stack(file
-        .map(_.split(':')(1).split('|')
-            .map(splitBar =>
+    val fileArr: Array[String] = file.toArray
+    var howMany: Array[Int] = Array.fill(fileArr.length)(1)
+    
+    def traverseAndAdd(x: (Int, Int)): Unit =
+        if x._2 > 0 && x._1 < howMany.length then
+            howMany(x._1) += 1
+            traverseAndAdd((x._1 + 1, x._2 - 1))
+    
+    def wins(line: String): (Int, Int) = // Gamenumber, wins
+        (line.split(':')(0).split(' ').last.toInt - 1,
+            line.split(':')(1).split('|').map(splitBar =>
                 Set(splitBar.split(' ').filter(_.nonEmpty).map(_.toInt)*)
-            )
-        ).toArray*
-    )
-    var winCounter = new Array(lines.size)
+            ).reduceLeft(_.intersect(_)).size
+        )
 
-    def wins(line: Array[Set[Int]]): Int = line.reduce(_.intersect(_)).size
+    var linewins: (Int, Int) = (0, 0)
 
-    while lines.nonEmpty do
-        ???
-    3
+    for line <- fileArr do
+        linewins = wins(line)
+        for x <- 0 until howMany(linewins._1) do
+            traverseAndAdd((linewins._1 + 1, linewins._2))
+
+    howMany.sum
 
 def day5part1(file: Iterator[String]): Int = ???
 def day5part2(file: Iterator[String]): Int = ???
