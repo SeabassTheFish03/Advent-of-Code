@@ -1,5 +1,4 @@
 import scala.io.Source
-import scala.util.matching.Regex
 import scala.util.matching.Regex._
 import scala.util.chaining._
 import scala.math._
@@ -53,23 +52,50 @@ def day3part1(file: Iterator[String]): Int =
             (rawknit(startIndex).toString.concat(absorbLeft(startIndex + 1, rawknit)))
         else rawknit(startIndex).toString
 
-    file.toArray.mkString(".").pipe(rawknit => rawknit.toArray.zipWithIndex
-        .filter((c, dex) => c.isDigit && !rawknit.lift(dex - 1).getOrElse(' ').isDigit)
-        .map((c, dex) => (absorbLeft(dex, rawknit).toInt, dex))
-        .filter((num, dex) =>
-            (0 to log10(num).toInt).map(offset =>
-                ((index: Int) =>
-                    Set(-1, 0, 1).flatMap(offsety =>
-                        Set(-1, 0, 1).map(offsetx =>
-                            (Source.fromFile("./Puzzle Inputs/day3.txt").getLines.next.length + 1)
-                                .pipe(lineLength => rawknit.lift(index + lineLength*offsety + offsetx).getOrElse(' '))
+    file.toArray.pipe(raw =>
+        raw.mkString(".").pipe(rawknit => rawknit.toArray.zipWithIndex
+            .filter((c, dex) => c.isDigit && !rawknit.lift(dex - 1).getOrElse(' ').isDigit)
+            .map((c, dex) => (absorbLeft(dex, rawknit).toInt, dex))
+            .filter((num, dex) =>
+                (0 to log10(num).toInt).map(offset =>
+                    ((index: Int) =>
+                        Set(-1, 0, 1).flatMap(offsety =>
+                            Set(-1, 0, 1).map(offsetx =>
+                                rawknit.lift(index + (raw(0).length + 1)*offsety + offsetx).getOrElse(' ')
+                            )
                         )
-                    )
-                ).apply(dex + offset).intersect("=&#+$/*%-@".toSet).nonEmpty
-            ).reduce(_ || _)
-        ).map(_._1).sum
+                    ).apply(dex + offset).intersect("=&#+$/*%-@".toSet).nonEmpty
+                ).reduce(_ || _)
+            ).map(_._1).sum
+        )
     )
-def day3part2(file: Iterator[String]): Int = ???
+def day3part2(file: Iterator[String]): Int =
+    val raw = file.toArray
+    val rawknit = raw.mkString(".")
+    val lineLength = raw(0).length + 1
+
+    def absorbNum(dex: Int): (Int, Int) =
+        def absorbLeft(startIndex: Int): String =
+            if rawknit.lift(startIndex + 1).getOrElse(' ').isDigit then
+                (rawknit(startIndex).toString.concat(absorbLeft(startIndex + 1)))
+            else rawknit(startIndex).toString
+
+        if rawknit.lift(dex - 1).getOrElse(' ').isDigit then
+            absorbNum(dex - 1)
+        else (absorbLeft(dex).toInt, dex)
+
+    def getAdjacent(dex: Int): Set[(Int, Int)] =
+        Set(-1, 0, 1).flatMap(offsety =>
+            Set(-1, 0, 1).map(offsetx =>
+                (rawknit.lift(dex + lineLength*offsety + offsetx).getOrElse(' '),
+                    dex + lineLength*offsety + offsetx
+                )
+            )
+        ).filter(_._1.isDigit).map(x => absorbNum(x._2))
+
+    rawknit.zipWithIndex.filter(_._1 == '*')
+        .map(x => getAdjacent(x._2).toArray.map(_._1)).filter(_.length == 2).map(_.product).sum
+    
 
 def day4part1(file: Iterator[String]): Int =
     file.map(_.split(':')(1).split('|')
@@ -97,21 +123,21 @@ def day5part1(file: Iterator[String]): Int = ???
 def day5part2(file: Iterator[String]): Int = ???
 
 def day9part1(file: Iterator[String]): Int =
-    def slidingWindow(seq: Array[Int]): (Array[Int], Int) =
+    def slidingWindowLeft(seq: Array[Int]): (Array[Int], Int) =
         if seq.sum == 0 then (seq, 0)
-        else slidingWindow(seq.sliding(2).map(x => x(1)-x(0)).toArray).pipe((_, ph) =>
+        else slidingWindowLeft(seq.sliding(2).map(x => x(1)-x(0)).toArray).pipe((_, ph) =>
             (seq, seq.last + ph)
         )
 
-    file.map(_.split(" ").map(_.toInt).pipe(slidingWindow(_))._2).sum
+    file.map(_.split(" ").map(_.toInt).pipe(slidingWindowLeft(_))._2).sum
 def day9part2(file: Iterator[String]): Int =
-    def slidingWindow(seq: Array[Int]): (Array[Int], Int) =
+    def slidingWindowRight(seq: Array[Int]): (Array[Int], Int) =
         if seq.sum == 0 then (seq, 0)
-        else slidingWindow(seq.reverse.sliding(2).map(x => x(0)-x(1)).toArray.reverse).pipe((_, ph) =>
+        else slidingWindowRight(seq.reverse.sliding(2).map(x => x(0)-x(1)).toArray.reverse).pipe((_, ph) =>
             (seq, seq(0) - ph)
         )
     
-    file.map(_.split(" ").map(_.toInt).pipe(slidingWindow(_))._2).sum
+    file.map(_.split(" ").map(_.toInt).pipe(slidingWindowRight(_))._2).sum
 
 @main def main(day: Int): Unit =
     day match
@@ -126,7 +152,7 @@ def day9part2(file: Iterator[String]): Int =
         case 3 =>
             println("Day 3:")
             println("Part 1:\n" + day3part1(Source.fromFile("./Puzzle Inputs/day3.txt").getLines))
-            println("Part 2:\n" + day3part2(Source.fromFile("./Puzzle Inputs/day4.txt").getLines))
+            println("Part 2:\n" + day3part2(Source.fromFile("./Puzzle Inputs/day3.txt").getLines))
         case 4 =>
             println("Day 4:")
             println("Part 1:\n" + day4part1(Source.fromFile("./Puzzle Inputs/day4.txt").getLines))
