@@ -111,9 +111,6 @@ def calc_score(numbers: list[int], board: list[list[int]]) -> int:
     for row in board:
         flat_board += row
 
-    filtered = sum(filter(lambda x: x not in numbers, flat_board))
-    print(filtered)
-    print(numbers[-1])
     return sum(filter(lambda x: x not in numbers, flat_board)) * numbers[-1]
 
 
@@ -125,7 +122,7 @@ def part2(numbers: list[int], boards: list[list[list[int]]]) -> int:
         boards_remaining = list(filter(lambda board: not can_win(numbers[:i], board), boards_remaining))
         i += 1
 
-    return calc_score(numbers[:(i - 1)], boards_remaining[0])
+    return calc_score(numbers[:(i - 0)], boards_remaining[0])
 
 
 # print('Part 1: ' + part1(numbers, list(bds)))
