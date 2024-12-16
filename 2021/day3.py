@@ -1,8 +1,9 @@
-from bitstring import *
+from bitstring import BitArray
 
-data = open('day3_data.txt', 'r').read()
+data = open('./inputs/day3_data.txt', 'r').read()
 
 lines = data.split('\n')
+
 
 def more(data, i):
     ones = 0
@@ -19,6 +20,7 @@ def more(data, i):
     else:
         return 0
 
+
 def scrub(arry, value):
     outArray = []
     for element in arry:
@@ -26,6 +28,7 @@ def scrub(arry, value):
             outArray.append(element)
 
     return outArray
+
 
 def part1(data):
     gamma = BitArray(bin='000000000000')
@@ -38,9 +41,11 @@ def part1(data):
     gamma.invert()
     epsilon = gamma.uint
 
-    return int(gamma1)*int(epsilon)
+    return int(gamma1) * int(epsilon)
 
 # This function does not work
+
+
 def part2(data):
     oxyDat = data.copy()
     co2Dat = data.copy()
@@ -57,9 +62,10 @@ def part2(data):
 
     oxy = int(oxyDat[0], 2)
     co2 = int(co2Dat[0], 2)
-    return oxy*co2
+    return oxy * co2
+
 
 print('Part 1: ' + str(part1(lines)))
 print('Part 2: ' + str(part2(lines)))
-#print(''.join(gamma))
-#print(int(''.join(gamma), 2))
+# print(''.join(gamma))
+# print(int(''.join(gamma), 2))

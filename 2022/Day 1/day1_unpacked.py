@@ -1,4 +1,4 @@
-f = open("1", "r")
+f = open("../inputs/day1.txt", "r")
 input_text = f.read()
 f.close()
 
@@ -8,15 +8,15 @@ elves = input_text.split("\n\n")
 # Split each individual elf into its food items
 elves_split_by_food = []
 for elf in elves:
-	elves_split_by_food.append(elf.split("\n"))
+    elves_split_by_food.append(elf.split("\n"))
 
 # Summing all the food items by elf
 elf_sums = []
 for elf_food_list in elves_split_by_food:
-	intified = [int(item) for item in elf_food_list]
-	elf_sums.append(sum(intified))
+    intified = [int(item) for item in elf_food_list]
+    elf_sums.append(sum(intified))
 
-elf_sums.sort() # Useful for part b
+elf_sums.sort()  # Useful for part b
 
 # We know the maximum will be the last element in the list since we sorted it
 print("1a) Maximum calories carried by a single elf: " + str(elf_sums[-1]))

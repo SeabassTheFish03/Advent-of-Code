@@ -1,7 +1,7 @@
 from collections import Counter
 
 
-with open('day5_data.txt', 'r') as f:
+with open('./inputs/day5_data.txt', 'r') as f:
     data = f.readlines()
 
 

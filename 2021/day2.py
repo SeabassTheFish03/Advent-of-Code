@@ -1,4 +1,5 @@
-data = open('day2_data.txt', 'r').read()
+data = open('./inputs/day2_data.txt', 'r').read()
+
 
 def part1(lines):
     horizontal = 0
@@ -14,7 +15,8 @@ def part1(lines):
         elif command == 'down':
             vertical += int(value)
 
-    return horizontal*vertical
+    return horizontal * vertical
+
 
 def part2(lines):
     aim = 0
@@ -26,13 +28,14 @@ def part2(lines):
         value = int(splitted[1])
         if command == 'forward':
             horizontal += value
-            vertical += value*aim
+            vertical += value * aim
         elif command == 'up':
             aim -= value
         elif command == 'down':
             aim += value
 
-    return horizontal*vertical
+    return horizontal * vertical
+
 
 print('Part 1: ' + str(part1(data.split('\n'))))
 print('Part 2: ' + str(part2(data.split('\n'))))

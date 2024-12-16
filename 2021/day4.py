@@ -1,7 +1,7 @@
 from functools import reduce
 
 # Getting the data
-with open('day4_data.txt', 'r') as f:
+with open('./inputs/day4_data.txt', 'r') as f:
     data = f.read()
 
 # Comprehending the data
